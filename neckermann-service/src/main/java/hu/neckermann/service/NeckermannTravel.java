@@ -30,6 +30,7 @@ public class NeckermannTravel extends Application {
 		router.attach("/keywordSearch?{keywords}", SearchResource.class);
 		router.attach("/flightSearch?{country}", FlightResource.class);
 		router.attach("/flightSearch?{country}&{region}", FlightResource.class);
+		router.attach("/singleSearch?{name}&{id}", SingleResource.class);
 		router.attach("/countries", ListAllCountries.class);
 		return router;
 	}
