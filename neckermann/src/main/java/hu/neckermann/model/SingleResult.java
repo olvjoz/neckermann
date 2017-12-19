@@ -12,20 +12,20 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 public class SingleResult {
 
 	@XmlElement(name = "lodgement")
-	private Lodgement lodgement;
+	private DetailedLodgement lodgement;
 
 	public SingleResult() {
 	}
 
-	public SingleResult(Lodgement lodgement) {
+	public SingleResult(DetailedLodgement lodgement) {
 		this.lodgement = lodgement;
 	}
 
-	public Lodgement getLodgement() {
+	public DetailedLodgement getLodgement() {
 		return lodgement;
 	}
 
-	public void setLodgement(Lodgement lodgement) {
+	public void setLodgement(DetailedLodgement lodgement) {
 		this.lodgement = lodgement;
 	}
 
