@@ -63,8 +63,11 @@
 				<configuration>
 					<sources>
 						<source>src/main/java/hu/neckermann/model/Lodgement.java</source>
-						<source>src/main/java/hu/neckermann/model/SearchResultItem.java</source> 
+						<source>src/main/java/hu/neckermann/model/DetailedLodgement.java</source> 
 						<source>src/main/java/hu/neckermann/model/SearchResults.java</source>
+						<source>src/main/java/hu/neckermann/model/Country.java</source>
+						<source>src/main/java/hu/neckermann/model/Countries.java</source> 
+						<source>src/main/java/hu/neckermann/model/SingleResult.java</source>
 					</sources>
 				</configuration>
 			</plugin>
