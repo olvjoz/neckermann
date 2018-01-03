@@ -42,11 +42,13 @@ public class SearchResultsParser {
 
 	private int getTotalItems(Document doc) throws IOException {
 		int totalItems = 0;
+		
 		try {
 			totalItems = Integer.parseInt(doc.select("div.nr-of-results > div > p > span").get(0).text().trim());
 		} catch(Exception e) {
 			throw new IOException("Malformed document");
 		}
+		
 		return totalItems;
 	}
 
@@ -108,32 +110,53 @@ public class SearchResultsParser {
 	}
 
 	private Document getNextPage(Document doc) throws IOException {
-		String nextPage = null;
+		Document retdoc = null;
 		try {
-			doc.baseUri().split("&"); // TODO
-			nextPage = doc.baseUri().replace("&page=", "&page=");
-			logger.info("Next page: {}", nextPage);
+			String nextPageUri = null;
+			
+			if(!doc.baseUri().contains("&page=")){
+				nextPageUri = doc.baseUri();
+				
+				if(!nextPageUri.contains("?")){
+					nextPageUri = nextPageUri + "?&page=2";
+				}else{
+					nextPageUri = nextPageUri + "&page=2";
+				}
+			}else{
+				String[] split = doc.baseUri().split("&page=");
+				nextPageUri = split[0] + "&page=" + (Integer.valueOf(split[1])+1) ;
+			}
+			logger.info("Next page: {}", nextPageUri);
+			
+			retdoc = nextPageUri != null ? Jsoup.connect(nextPageUri).userAgent("Mozilla").get() : null;
 		} catch(Exception e) {
-			// no more pages
+			logger.error(e.getMessage(),e);
 		}
-		return nextPage != null ? Jsoup.connect(nextPage).userAgent("Mozilla").get() : null;
+		return retdoc;
 	}
 
 	public SearchResults parse(Document doc) throws IOException {
 		List<Lodgement> lodgements = new LinkedList<Lodgement>();
+		
 		int totalItems = getTotalItems(doc);
 		logger.info("Total number of items: {}", totalItems);
-loop:		while (totalItems != 0 && doc != null) {
+		
+		loop: while (totalItems != 0 && doc != null) {
 			for (Lodgement lodgement : extractItems(doc)) {
 				if (0 <= maxItems && maxItems <= lodgements.size()) {
 					break loop;
 				}
 				lodgements.add(lodgement);
 			}
-			if (0 <= maxItems && maxItems <= lodgements.size()) break;
+			
+			if ((0 <= maxItems && maxItems <= lodgements.size()) || totalItems <= lodgements.size()){
+				break;
+			}
+			
 			doc = getNextPage(doc);
 		}
-		return new SearchResults(totalItems, 1, lodgements.size(), lodgements);
+		
+		return new SearchResults(totalItems, totalItems > 0 ? 1 : 0, lodgements.size(), lodgements);
 	}
 
 }
