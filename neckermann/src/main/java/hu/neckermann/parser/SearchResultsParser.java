@@ -85,12 +85,12 @@ public class SearchResultsParser {
 					String[] splitted = priceValues.split("€");
 					
 					Price e = new Price();
-					e.setValue(Long.valueOf(splitted[0].replace(".", "")));
+					e.setValue(Long.valueOf(splitted[0].replaceAll("[^\\d]", "")));
 					e.setCurrency("€");
 					prices.add(e);
 					
 					Price ft = new Price();
-					ft.setValue(Long.valueOf(splitted[1].replaceAll("[^\\d.]", "")));
+					ft.setValue(Long.valueOf(splitted[1].replaceAll("[^\\d]", "")));
 					ft.setCurrency("Ft");
 					prices.add(ft);
 				}catch (Exception e) {
