@@ -1,11 +1,10 @@
 package hu.neckermann.parser;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.jsoup.Jsoup;
@@ -15,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import hu.neckermann.model.Lodgement;
+import hu.neckermann.model.Price;
 import hu.neckermann.model.SearchResults;
 
 public class SearchResultsParser {
@@ -59,6 +59,7 @@ public class SearchResultsParser {
 			
 			String uri,rating, hotelName, location, description = null;
 			Set<String> features = new HashSet<String>();
+			List<Price> prices = new ArrayList<Price>();
 			
 			try {
 				hotelName = element.select("div.result-hotel > a > span").get(0).text().trim();
@@ -79,6 +80,25 @@ public class SearchResultsParser {
 					rating = "Undefined";
 				}
 				
+				try{
+					String priceValues = element.select("div.result-price-holder > h3.displayPrice").text().replaceAll("\\s","");
+					String[] splitted = priceValues.split("€");
+					
+					Price e = new Price();
+					e.setValue(Long.valueOf(splitted[0].replace(".", "")));
+					e.setCurrency("€");
+					prices.add(e);
+					
+					Price ft = new Price();
+					ft.setValue(Long.valueOf(splitted[1].replaceAll("[^\\d.]", "")));
+					ft.setCurrency("Ft");
+					prices.add(ft);
+				}catch (Exception e) {
+					if(logger.isDebugEnabled()){
+						logger.debug("No prices for lodgement: " + uri);
+					}
+				}
+				
 			} catch(Exception e) {
 				throw new IOException("Malformed document");
 			}
@@ -91,6 +111,7 @@ public class SearchResultsParser {
 			lodgement.setRating(rating);
 			lodgement.setDescription(description);
 			lodgement.setFeatures(features);
+			lodgement.setPrices(prices);
 			
 			lodgements.add(lodgement);
 			

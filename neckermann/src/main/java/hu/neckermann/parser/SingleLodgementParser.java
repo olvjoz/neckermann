@@ -37,7 +37,7 @@ public class SingleLodgementParser {
 			}
 		}
 		
-		String uri, rating, hotelName, location, description = null;
+		String rating, hotelName, location, description = null;
 		Set<String> features = new HashSet<String>();
 		
 		try {
@@ -48,14 +48,30 @@ public class SingleLodgementParser {
 			hotelName = infos.select("h1.hotelname").get(0).text().trim();
 			location = infos.select("h5").get(0).text().trim();
 			description = infos.select("div.product-text").get(0).text().trim();
+			
+			
+			try {
+				rating = infos.select("div.rg-ratings > div > span").last().text().trim();
+				rating = rating + " of "+ infos.select("div.rg-ratings > div > span").first().text().trim() + " votes";
+			} catch(NullPointerException e) {
+				if(logger.isInfoEnabled()){
+					logger.info("Not found ratings for hotel: "+ hotelName);
+				}
+				rating = "Undefined";
+			}
+			
+			features.addAll(infos.select("div.attribute-holder > span").eachText());
+			
 		} catch(Exception e) {
 			throw new IOException("Malformed document");
 		}
 		
 		lodgement.setUri(doc.baseUri());
 		lodgement.setHotelName(hotelName);
+		lodgement.setRating(rating);
 		lodgement.setLocation(location);
 		lodgement.setDescription(description);
+		lodgement.setFeatures(features);
 		lodgement.setImages(images);
 		
 		return lodgement;

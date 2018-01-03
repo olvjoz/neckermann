@@ -1,5 +1,6 @@
 package hu.neckermann.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 	propOrder = {
 		"hotelName",
 		"location",
+		"prices",
 		"rating",
 		"description",
 		"features",
@@ -33,13 +35,17 @@ public class Lodgement {
 	private String hotelName;
 	
 	@XmlElement(required = true)
-	private String description;
-	
-	@XmlElement(required = true)
 	private String location;
+	
+	@XmlElementWrapper(name="prices")
+	@XmlElement(name = "price")
+	private List<Price> prices;
 	
 	@XmlElement(required = true)
 	private String rating;
+	
+	@XmlElement(required = true)
+	private String description;
 	
 	@XmlElementWrapper(name="features")
 	@XmlElement(name="feature")
@@ -96,4 +102,13 @@ public class Lodgement {
 	public void setFeatures(Set<String> features) {
 		this.features = features;
 	}
+
+	public List<Price> getPrices() {
+		return prices;
+	}
+
+	public void setPrices(List<Price> prices) {
+		this.prices = prices;
+	}
+
 }
