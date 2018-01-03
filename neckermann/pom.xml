@@ -67,6 +67,8 @@
 						<source>src/main/java/hu/neckermann/model/SearchResults.java</source>
 						<source>src/main/java/hu/neckermann/model/Country.java</source>
 						<source>src/main/java/hu/neckermann/model/Countries.java</source> 
+						<source>src/main/java/hu/neckermann/model/Price.java</source>
+						<source>src/main/java/hu/neckermann/model/LongDescription.java</source> 
 						<source>src/main/java/hu/neckermann/model/SingleResult.java</source>
 					</sources>
 				</configuration>

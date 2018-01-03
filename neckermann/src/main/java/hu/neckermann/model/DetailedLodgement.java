@@ -1,5 +1,6 @@
 package hu.neckermann.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 		"location",
 		"rating",
 		"description",
+		"longDescriptions",
 		"features",
 		"images",
 	}
@@ -35,6 +37,10 @@ public class DetailedLodgement {
 	
 	@XmlElement(required = true)
 	private String description;
+	
+	@XmlElementWrapper(name="longDescriptions")
+	@XmlElement(name = "description")
+	private List<LongDescription> longDescriptions;
 	
 	@XmlElement(required = true)
 	private String location;
@@ -108,5 +114,13 @@ public class DetailedLodgement {
 
 	public void setImages(Set<String> images) {
 		this.images = images;
+	}
+
+	public List<LongDescription> getLongDescriptions() {
+		return longDescriptions;
+	}
+
+	public void setLongDescriptions(List<LongDescription> longDescriptions) {
+		this.longDescriptions = longDescriptions;
 	}
 }
